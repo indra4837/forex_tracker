@@ -3,9 +3,9 @@ from _datetime import datetime
 import pandas as pd
 import plotly.io as pio
 import mplfinance as mpf
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+# import dash
+# import dash_core_components as dcc
+# import dash_html_components as html
 
 
 def process_data_plotly():
