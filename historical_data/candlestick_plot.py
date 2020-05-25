@@ -123,5 +123,5 @@ def mpl_candlestick_all_currency():
     for key, value in df.items():
         mpl_candlestick_single_currency(value)
 
-# for function testing only
+# for module testing only
 # plotly_candlestick_all_currency()
