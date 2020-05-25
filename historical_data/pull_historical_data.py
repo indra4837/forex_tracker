@@ -66,5 +66,5 @@ def pull_data():
                 print("Finished writing " + overall_symbol[i][j] + ".csv")
         time.sleep(60)
 
-
-pull_data()
+# for function testing only
+# pull_data()

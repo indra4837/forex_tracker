@@ -3,7 +3,9 @@ from _datetime import datetime
 import pandas as pd
 import plotly.io as pio
 import mplfinance as mpf
-from plotly.subplots import make_subplots
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
 
 
 def process_data_plotly():
@@ -85,12 +87,16 @@ def plotly_candlestick_single_currency(symbol, df_candle, ema_list):
                        line=dict(color='blue', width=1),
                        name='EMA21')]
 
-    figSignal = go.Figure(data=data)
+    layout = {'title': symbol}
+    figSignal = go.Figure(data=data, layout=layout)
     rangebreaks = [dict(enabled=True)]
     figSignal.update_layout(title=symbol)
     figSignal.update_xaxes(rangebreaks=rangebreaks)
-
     figSignal.show()
+
+    # app = dash.Dash()
+    # app.layout = html.Div([dcc.Graph(figure=figSignal)])
+    # app.run_server(debug=True, use_reloader=False)
 
 
 def plotly_candlestick_all_currency():
@@ -117,5 +123,5 @@ def mpl_candlestick_all_currency():
     for key, value in df.items():
         mpl_candlestick_single_currency(value)
 
-
-plotly_candlestick_all_currency()
+# for function testing only
+# plotly_candlestick_all_currency()
