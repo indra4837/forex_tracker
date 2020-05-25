@@ -1,7 +1,19 @@
 from historical_data.candlestick_plot import *
 
 
-def checking_type_of_trade() -> str:
+def get_extreme_value_candle(df) -> tuple:
+    """Returns (lowest, highest) tuple for each time-entry in candle
+    """
+    return df.values.max(), df.values.min()
+
+
+def get_extreme_value_ema(ema8, ema13, ema21) -> tuple:
+    """Returns (lowest, highest) tuple for each time-entry in EMA list
+    """
+    return max(ema8, ema13, ema21), min(ema8, ema13, ema21)
+
+
+def candle_pos_wrt_ema() -> str:
     """Check if candles above/below EMA line
     Above: Pending long
     Below: Pending short
@@ -12,7 +24,6 @@ def checking_type_of_trade() -> str:
     # categories: top, hit, bottom (w.r.t ema line)
     positions_candle = {'EUR/USD': [], 'AUD/USD': [], 'GBP/USD': [], 'NZD/USD': [], 'USD/CAD': [], 'USD/CHF': [],
                         'USD/JPY': []}
-    # extreme_value_ema = []
 
     for k, v in candle_data.items():
 
@@ -34,19 +45,32 @@ def checking_type_of_trade() -> str:
                 positions_candle[k].append((j, 'Top'))
             else:
                 positions_candle[k].append((j, 'Hit'))
-    print(positions_candle)
 
-def get_extreme_value_candle(df) -> tuple:
-    """Returns (lowest, highest) tuple for each time-entry in candle
-    """
-    return df.values.max(), df.values.min()
+    return positions_candle
 
 
-def get_extreme_value_ema(ema8, ema13, ema21) -> tuple:
-    """Returns (lowest, highest) tuple for each time-entry in EMA list
-    """
-    return max(ema8, ema13, ema21), min(ema8, ema13, ema21)
+def checking_setup():
+    setup_confirmed = {'EUR/USD': [], 'AUD/USD': [], 'GBP/USD': [], 'NZD/USD': [], 'USD/CAD': [], 'USD/CHF': [],
+                       'USD/JPY': []}
+    # type(positions) = dict
+    positions = candle_pos_wrt_ema()
+    count = 0
+    # for i in range(1, 3):
+    #    print(i)
+    # print(positions)
+    for k, v in positions.items():
+        # start index from 3 since we are checking prev 3 (error handling)
+        for i in range(3, len(v)):
+            if positions[k][i][1] == 'Hit':
+                for j in range(i - 3, i):
+                    if positions[k][i - 1][1] == 'Bottom':
+                        setup_confirmed[k].append((i, 'Short'))
+                    elif positions[k][i - 1][1] == 'Top':
+                        setup_confirmed[k].append((i, 'Long'))
+
+    print(setup_confirmed)
 
 
 # get_extreme_value()
-checking_type_of_trade()
+# candle_pos_wrt_ema()
+checking_setup()
