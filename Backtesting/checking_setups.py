@@ -50,27 +50,26 @@ def candle_pos_wrt_ema() -> str:
 
 
 def checking_setup():
+    trailing_checks = 3
     setup_confirmed = {'EUR/USD': [], 'AUD/USD': [], 'GBP/USD': [], 'NZD/USD': [], 'USD/CAD': [], 'USD/CHF': [],
                        'USD/JPY': []}
     # type(positions) = dict
     positions = candle_pos_wrt_ema()
-    count = 0
-    # for i in range(1, 3):
-    #    print(i)
-    # print(positions)
+
     for k, v in positions.items():
         # start index from 3 since we are checking prev 3 (error handling)
-        for i in range(3, len(v)):
+        for i in range(trailing_checks, len(v)):
             if positions[k][i][1] == 'Hit':
-                for j in range(i - 3, i):
+                for j in range(i - trailing_checks, i):
                     if positions[k][i - 1][1] == 'Bottom':
                         setup_confirmed[k].append((i, 'Short'))
                     elif positions[k][i - 1][1] == 'Top':
                         setup_confirmed[k].append((i, 'Long'))
+    #   TODO: remove repeated long/short calls
 
     print(setup_confirmed)
 
-
+# TODO: Calculating stop-loss and take-profit functions
 # get_extreme_value()
 # candle_pos_wrt_ema()
 checking_setup()

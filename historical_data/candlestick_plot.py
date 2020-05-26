@@ -46,6 +46,7 @@ def ema():
     """Calculates exponential moving average using
     pandas dataframe ewm method
     """
+    # TODO: Check ema formula and verify accuracy
     overall_ema_dict = {}
     df_dict = process_data_plotly()
     #key: Currency, value: dataframe

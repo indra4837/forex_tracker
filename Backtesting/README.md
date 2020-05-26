@@ -18,4 +18,13 @@
             <ul>
                 <li>Long/Short: 1.5 times of loss (pip value)</li>
             </ul>
-            
+        <H2>Trade-size calculator</H2>
+            <ul>
+                <li>Uses defined risk and equity to calculate position size</li>
+                <li>Adjusts positions and SL/TP size</li>
+            </ul>
+        <H2>Optimization of trading strategy</H2>
+            <ul>
+                <li>Using ML to perform optimization</li>
+                <li>Feeds data from back-testing trades</li>
+            </ul>
