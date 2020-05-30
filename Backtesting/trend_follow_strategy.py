@@ -95,12 +95,11 @@ def stoploss_takeprofit():
             if v[i][1] == 'Short':
                 index = v[i][0]
                 sl = max(candle_data[k].iloc[j].values.max() for j in range(index - 4, index))
-                candle_data[k].at[index, 'Stop Loss'] = float(sl)
-    # TODO: ensure stop loss is a floating number instead
+                candle_data[k].loc[index, 'Stop Loss'] = float(sl)
             elif v[i][1] == 'Long':
                 index = v[i][0]
                 sl = min(candle_data[k].iloc[j].values.min() for j in range(index - 4, index))
-                candle_data[k].at[index, 'Stop Loss'] = float(sl)
+                candle_data[k].loc[index, 'Stop Loss'] = float(sl)
                 # print(v[i][0])
                 # stop_loss[i] = sl
 
