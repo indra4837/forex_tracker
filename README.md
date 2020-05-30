@@ -1,4 +1,3 @@
-<Title>Forex Tracker</Title>
 <H1>Basic</H1> 
     <input type="checkbox">
     <label> Tracks Top 7 Forex Pairs</label><br>
