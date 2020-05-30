@@ -45,15 +45,14 @@ def candle_pos_wrt_ema() -> str:
                 positions_candle[k].append((j, 'Top'))
             else:
                 positions_candle[k].append((j, 'Hit'))
-    print(positions_candle)
+
     return positions_candle
 
 
 def checking_setup():
-    trailing_checks = 3
+    trailing_checks = 5  # num of prev. positions of candle to check
     setup_confirmed = {'EUR/USD': [], 'AUD/USD': [], 'GBP/USD': [], 'NZD/USD': [], 'USD/CAD': [], 'USD/CHF': [],
                        'USD/JPY': []}
-    # type(positions) = dict
     positions = candle_pos_wrt_ema()
 
     for k, v in positions.items():
@@ -67,11 +66,50 @@ def checking_setup():
                          if positions[k][j][1] == 'Top') == trailing_checks:
                     setup_confirmed[k].append((i, 'Long'))
 
-    #   TODO: remove repeated long/short calls
+    #   TODO: code decomposition -> check_trailing_positions (function)
+    # print(setup_confirmed)
+    return setup_confirmed
 
-    print(setup_confirmed)
 
-# TODO: Calculating stop-loss and take-profit functions
-# get_extreme_value()
-candle_pos_wrt_ema()
+def stoploss_takeprofit():
+    """Calculates stop-loss and take-profit for each trade
+    """
+
+    trailing_checks = 5
+    risk = 1.5
+    candle_data = process_data_plotly()
+    for k, v in candle_data.items():
+        candle_data[k].insert(5, 'Stop Loss', 0)
+        candle_data[k].insert(6, 'Take Profit', 0)
+
+    setup = checking_setup()
+
+    # remove all columns except high and low
+    for k, v in candle_data.items():
+        temp = v.drop(columns=['Date'])
+        for i in range(7):
+            candle_data[k] = temp
+
+    for k, v in setup.items():
+        for i in range(len(v)):
+            if v[i][1] == 'Short':
+                index = v[i][0]
+                sl = max(candle_data[k].iloc[j].values.max() for j in range(index - 4, index))
+                candle_data[k].at[index, 'Stop Loss'] = float(sl)
+    # TODO: ensure stop loss is a floating number instead
+            elif v[i][1] == 'Long':
+                index = v[i][0]
+                sl = min(candle_data[k].iloc[j].values.min() for j in range(index - 4, index))
+                candle_data[k].at[index, 'Stop Loss'] = float(sl)
+                # print(v[i][0])
+                # stop_loss[i] = sl
+
+#    candle_data['EUR/USD'].at[0, 'Stop Loss'] = 10
+#    print(candle_data['EUR/USD'].iloc[0])
+    print(candle_data['EUR/USD'].head(60))
+
+
+# candle_pos_wrt_ema()
 # checking_setup()
+# print(process_data_plotly())
+stoploss_takeprofit()
