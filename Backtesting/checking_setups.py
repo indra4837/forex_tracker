@@ -45,7 +45,7 @@ def candle_pos_wrt_ema() -> str:
                 positions_candle[k].append((j, 'Top'))
             else:
                 positions_candle[k].append((j, 'Hit'))
-
+    print(positions_candle)
     return positions_candle
 
 
@@ -60,16 +60,18 @@ def checking_setup():
         # start index from 3 since we are checking prev 3 (error handling)
         for i in range(trailing_checks, len(v)):
             if positions[k][i][1] == 'Hit':
-                for j in range(i - trailing_checks, i):
-                    if positions[k][i - 1][1] == 'Bottom':
-                        setup_confirmed[k].append((i, 'Short'))
-                    elif positions[k][i - 1][1] == 'Top':
-                        setup_confirmed[k].append((i, 'Long'))
+                if sum(1 for j in range(i - trailing_checks, i)
+                       if positions[k][j][1] == 'Bottom') == trailing_checks:
+                    setup_confirmed[k].append((i, 'Short'))
+                elif sum(1 for j in range(i - trailing_checks, i)
+                         if positions[k][j][1] == 'Top') == trailing_checks:
+                    setup_confirmed[k].append((i, 'Long'))
+
     #   TODO: remove repeated long/short calls
 
     print(setup_confirmed)
 
 # TODO: Calculating stop-loss and take-profit functions
 # get_extreme_value()
-# candle_pos_wrt_ema()
-checking_setup()
+candle_pos_wrt_ema()
+# checking_setup()
