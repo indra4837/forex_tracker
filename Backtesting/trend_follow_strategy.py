@@ -114,9 +114,6 @@ def stoploss_takeprofit():
 
     return candle_data
 
-# TODO: execute trade based on parameters
-# TODO: calculate total profit/loss
-# TODO: analyse effectiveness of trading strategy
 
 # candle_pos_wrt_ema()
 # checking_setup()
