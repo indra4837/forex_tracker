@@ -85,7 +85,7 @@ def stoploss_takeprofit():
 
     setup = checking_setup()
 
-    # remove all columns except high and low
+    # remove date column
     for k, v in candle_data.items():
         temp = v.drop(columns=['Date'])
         for i in range(7):
@@ -109,7 +109,7 @@ def stoploss_takeprofit():
                 tp = candle_data[k].loc[index, 'Close'] + risk * (candle_data[k].loc[index, 'Close'] - sl)
                 candle_data[k].loc[index, 'Take Profit'] = float(tp)
 
-    #candle_data['EUR/USD'].to_csv(r'C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\test.csv',
+    #candle_data['EUR/USD'].to_csv(r'C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\test_EURUSD.csv',
     #index=False)
 
     return candle_data
