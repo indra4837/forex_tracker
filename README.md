@@ -3,8 +3,6 @@
     <label> Tracks Top 7 Forex Pairs</label><br>
     <input type="checkbox">
     <label> Plots EMA 21, 13, 8 lines</label><br>
-    <input type="checkbox">
-    <label> Implement rangebreak by removing weekend data?</label><br>
 <H1>Intermediate</H1>
     <input type="checkbox">
     <label> Checks for trading setups</label><br>
