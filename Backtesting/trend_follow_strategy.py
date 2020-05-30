@@ -106,11 +106,11 @@ def stoploss_takeprofit():
                 candle_data[k].loc[index, 'Type'] = 'Long'
                 sl = min(candle_data[k].iloc[j]['Low'] for j in range(index - 4, index))
                 candle_data[k].loc[index, 'Stop Loss'] = float(sl)
-                tp = candle_data[k].loc[index, 'Close'] + risk * (sl - candle_data[k].loc[index, 'Close'])
+                tp = candle_data[k].loc[index, 'Close'] + risk * (candle_data[k].loc[index, 'Close'] - sl)
                 candle_data[k].loc[index, 'Take Profit'] = float(tp)
 
-    # candle_data['EUR/USD'].to_csv(r'C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\test.csv',
-    # index=False)
+    #candle_data['EUR/USD'].to_csv(r'C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\test.csv',
+    #index=False)
 
     return candle_data
 
