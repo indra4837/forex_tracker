@@ -81,6 +81,7 @@ def stoploss_takeprofit():
     for k, v in candle_data.items():
         candle_data[k].insert(5, 'Stop Loss', 0)
         candle_data[k].insert(6, 'Take Profit', 0)
+        candle_data[k].insert(7, 'Type', 0)
 
     setup = checking_setup()
 
@@ -94,20 +95,26 @@ def stoploss_takeprofit():
         for i in range(len(v)):
             if v[i][1] == 'Short':
                 index = v[i][0]
+                candle_data[k].loc[index, 'Type'] = 'Short'
                 sl = max(candle_data[k].iloc[j].values.max() for j in range(index - 4, index))
                 candle_data[k].loc[index, 'Stop Loss'] = float(sl)
-                tp = candle_data[k].loc[index, 'Close'] + risk*(sl - candle_data[k].loc[index, 'Close'])
-                candle_data[k].loc[index, 'Take Profit'] = float(tp)
-            elif v[i][1] == 'Long':
-                index = v[i][0]
-                sl = min(candle_data[k].iloc[j].values.min() for j in range(index - 4, index))
-                candle_data[k].loc[index, 'Stop Loss'] = float(sl)
-                tp = candle_data[k].loc[index, 'Close'] + risk*(sl - candle_data[k].loc[index, 'Close'])
+                tp = candle_data[k].loc[index, 'Close'] - risk * (sl - candle_data[k].loc[index, 'Close'])
                 candle_data[k].loc[index, 'Take Profit'] = float(tp)
 
-#    candle_data['EUR/USD'].at[0, 'Stop Loss'] = 10
-#    print(candle_data['EUR/USD'].iloc[0])
-    print(candle_data['EUR/USD'].head(60))
+            elif v[i][1] == 'Long':
+                index = v[i][0]
+                candle_data[k].loc[index, 'Type'] = 'Long'
+                sl = min(candle_data[k].iloc[j]['Low'] for j in range(index - 4, index))
+                candle_data[k].loc[index, 'Stop Loss'] = float(sl)
+                tp = candle_data[k].loc[index, 'Close'] + risk * (sl - candle_data[k].loc[index, 'Close'])
+                candle_data[k].loc[index, 'Take Profit'] = float(tp)
+
+    # candle_data['EUR/USD'].to_csv(r'C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\test.csv',
+    # index=False)
+
+    return candle_data
+
+
 
 
 # candle_pos_wrt_ema()
