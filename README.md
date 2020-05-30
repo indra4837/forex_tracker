@@ -24,8 +24,3 @@
 <H1>Super Advanced</H1>
     <input type="checkbox">
     <label> Deep-learning models to find best strategy</label><br>
-    
-Improvements
-- Create multiple accounts
-- Webscrape with auth to check request num
-- If ~ 500, change API_KEY and continue backtesting
