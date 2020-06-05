@@ -1,4 +1,6 @@
 from historical_data.candlestick_plot import *
+import os
+from _datetime import datetime
 
 
 def get_extreme_value_candle(df) -> tuple:
@@ -50,7 +52,7 @@ def candle_pos_wrt_ema() -> str:
 
 
 def checking_setup():
-    trailing_checks = 5  # num of prev. positions of candle to check
+    trailing_checks = 4  # num of prev. positions of candle to check
     setup_confirmed = {'EUR/USD': [], 'AUD/USD': [], 'GBP/USD': [], 'NZD/USD': [], 'USD/CAD': [], 'USD/CHF': [],
                        'USD/JPY': []}
     positions = candle_pos_wrt_ema()
@@ -61,10 +63,10 @@ def checking_setup():
             if positions[k][i][1] == 'Hit':
                 if sum(1 for j in range(i - trailing_checks, i)
                        if positions[k][j][1] == 'Bottom') == trailing_checks:
-                    setup_confirmed[k].append((i, 'Short'))
+                    setup_confirmed[k].append([i, 'Short'])
                 elif sum(1 for j in range(i - trailing_checks, i)
                          if positions[k][j][1] == 'Top') == trailing_checks:
-                    setup_confirmed[k].append((i, 'Long'))
+                    setup_confirmed[k].append([i, 'Long'])
 
     #   TODO: code decomposition -> check_trailing_positions (function)
     # print(setup_confirmed)
@@ -97,25 +99,30 @@ def stoploss_takeprofit():
                 index = v[i][0]
                 candle_data[k].loc[index, 'Type'] = 'Short'
                 sl = max(candle_data[k].iloc[j].values.max() for j in range(index - 4, index))
-                candle_data[k].loc[index, 'Stop Loss'] = float(sl)
                 tp = candle_data[k].loc[index, 'Close'] - risk * (sl - candle_data[k].loc[index, 'Close'])
-                candle_data[k].loc[index, 'Take Profit'] = float(tp)
-
+                if tp < sl:
+                    candle_data[k].loc[index, 'Stop Loss'] = float(sl)
+                    candle_data[k].loc[index, 'Take Profit'] = float(tp)
+                else:
+                    v[i][1] = 0  # TODO: get rid of short/long calls in csv file
             elif v[i][1] == 'Long':
                 index = v[i][0]
                 candle_data[k].loc[index, 'Type'] = 'Long'
                 sl = min(candle_data[k].iloc[j]['Low'] for j in range(index - 4, index))
-                candle_data[k].loc[index, 'Stop Loss'] = float(sl)
                 tp = candle_data[k].loc[index, 'Close'] + risk * (candle_data[k].loc[index, 'Close'] - sl)
-                candle_data[k].loc[index, 'Take Profit'] = float(tp)
+                if sl < tp:
+                    candle_data[k].loc[index, 'Stop Loss'] = float(sl)
+                    candle_data[k].loc[index, 'Take Profit'] = float(tp)
+                else:
+                    v[i][1] = 0
+        write_csv(candle_data[k], k)
 
-    #candle_data['EUR/USD'].to_csv(r'C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\test_EURUSD.csv',
-    #index=False)
 
-    return candle_data
+def write_csv(data, symbol):
+    # checks if directory (today's date) already exists
+    directory = "C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\" + str(datetime.now().date())
+    if not os.path.exists(directory):
+        os.mkdir(directory)
 
+    data.to_csv(r'' + directory + '\\trade_' + symbol.replace('/', '') + '.csv', index=False)
 
-# candle_pos_wrt_ema()
-# checking_setup()
-# print(process_data_plotly())
-stoploss_takeprofit()
