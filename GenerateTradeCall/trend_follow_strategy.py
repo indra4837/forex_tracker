@@ -120,7 +120,7 @@ def stoploss_takeprofit():
 
 def write_csv(data, symbol):
     # checks if directory (today's date) already exists
-    directory = "C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\Backtesting\\" + str(datetime.now().date())
+    directory = "C:\\Users\\Indra\\PycharmProjects\\forex_tracker\\GenerateTradeCall\\" + str(datetime.now().date())
     if not os.path.exists(directory):
         os.mkdir(directory)
 

@@ -1,4 +1,4 @@
-from Backtesting import trend_follow_strategy
+from GenerateTradeCall import trend_follow_strategy
 
 
 def main():
